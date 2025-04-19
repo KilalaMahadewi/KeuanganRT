@@ -4,6 +4,7 @@
 
   <div class="row">
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <a style="text-decoration:none" href="/iuran">
       <div class="card">
         <div class="card-body p-3">
           <div class="row">
@@ -23,28 +24,30 @@
           </div>
         </div>
       </div>
+      </a>
     </div>
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-      <div class="card">
-        <div class="card-body p-3">
-          <div class="row">
-            <div class="col-8">
-              <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
-                <h5 class="font-weight-bolder mb-0">
-                  2,300
-                  <span class="text-success text-sm font-weight-bolder">+3%</span>
-                </h5>
+      <a href="/pengeluaran" style="text-decoration: none;">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Pengeluaran</p>
+                  <h5 class="font-weight-bolder mb-0">
+                    Rp {{ number_format($totalPengeluaran ?? 0, 0, ',', '.') }}
+                  </h5>
+                </div>
               </div>
-            </div>
-            <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+              <div class="col-4 text-end">
+                <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
+                  <i class="ni ni-credit-card text-lg opacity-10" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </a>
     </div>
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
       <div class="card">
@@ -52,16 +55,15 @@
           <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
+                <p class="text-sm mb-0 text-capitalize font-weight-bold">Sisa Kas</p>
                 <h5 class="font-weight-bolder mb-0">
-                  +3,462
-                  <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                  Rp {{ number_format($sisaKas ?? 0, 0, ',', '.') }}
                 </h5>
               </div>
             </div>
             <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+              <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+                <i class="ni ni-chart-bar-32 text-lg opacity-10" aria-hidden="true"></i>
               </div>
             </div>
           </div>
@@ -93,10 +95,10 @@
     <div class="col-12 mt-4">
       <div class="card">
         <div class="card-header pb-0">
-          <h6>Grafik Iuran per Bulan</h6>
+          <h6>Grafik Per Bulan</h6>
         </div>
         <div class="card-body p-3">
-          <canvas id="chart-iuran"></canvas>
+          <canvas id="chart-perbulan"></canvas>
         </div>
       </div>
     </div>
@@ -107,21 +109,32 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    var ctxIuran = document.getElementById("chart-iuran").getContext("2d");
+    var ctx = document.getElementById("chart-perbulan").getContext("2d");
 
-    new Chart(ctxIuran, {
-      type: "line",  // Ganti menjadi 'line' untuk grafik garis
+    new Chart(ctx, {
+      type: "line",
       data: {
-        labels: @json($labels),  // Menampilkan label iuran (judul iuran)
-        datasets: [{
-          label: "Total Iuran (Rp)",
-          data: @json($dataIuran),  // Menampilkan data nominal total per iuran
-          borderColor: "#4CAF50",  // Warna garis
-          backgroundColor: "rgba(76, 175, 80, 0.2)",  // Warna latar belakang area grafik
-          borderWidth: 2,
-          fill: true,  // Isi area di bawah garis dengan warna
-          tension: 0.4  // Kelenturan garis, membuatnya lebih halus
-        }]
+        labels: @json($labels), // misalnya: ["Jan", "Feb", "Mar", ...]
+        datasets: [
+          {
+            label: "Total Iuran (Rp)",
+            data: @json($dataIuran),
+            borderColor: "#4CAF50",
+            backgroundColor: "rgba(76, 175, 80, 0.2)",
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: "Total Pengeluaran (Rp)",
+            data: @json($dataPengeluaran),
+            borderColor: "#F44336",
+            backgroundColor: "rgba(244, 67, 54, 0.2)",
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -136,13 +149,13 @@
             beginAtZero: true,
             ticks: {
               callback: function(value) {
-                return "Rp " + value.toLocaleString("id-ID");  // Format angka menjadi Rp
+                return "Rp " + value.toLocaleString("id-ID");
               }
             }
           },
           x: {
             grid: {
-              display: false  // Sembunyikan grid pada sumbu x
+              display: false
             }
           }
         }

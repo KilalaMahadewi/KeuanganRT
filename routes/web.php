@@ -106,4 +106,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Daftar Pengeluaran
-Route::resource('pengeluaran', PengeluaranController::class);
+Route::resource('pengeluarans', PengeluaranController::class);
+Route::post('/pengeluarans', [PengeluaranController::class, 'store'])->name('pengeluarans.store');
+

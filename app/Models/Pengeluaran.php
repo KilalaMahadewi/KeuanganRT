@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pengeluaran extends Model
 {
-    use HasFactory;
-    protected $table = 'pengeluaran';
-    protected $fillable = ['tanggal_pengeluaran', 'keterangan', 'nominal'];
+    protected $table = 'pengeluarans'; // pastikan ini plural
+
+    protected $fillable = [
+        'jenis_pengeluaran',
+        'jumlah_pengeluaran',
+        'tanggal_pengeluaran'
+    ];
 }
